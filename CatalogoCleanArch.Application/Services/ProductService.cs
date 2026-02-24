@@ -1,55 +1,64 @@
 ﻿using AutoMapper;
 using CatalogoCleanArch.Application.DTOs;
 using CatalogoCleanArch.Application.Interfaces;
-using CatalogoCleanArch.Domain.Entities;
-using CatalogoCleanArch.Domain.Interfaces;
+using CatalogoCleanArch.Application.Products.Commands;
+using CatalogoCleanArch.Application.Products.Queries;
+using MediatR;
 
 namespace CatalogoCleanArch.Application.Services
 {
     public class ProductService : IProductService
     {
         private IMapper _mapper;
-        private IProductRepository _productRepository;
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        private IMediator _mediator;
+        public ProductService(IMediator mediator, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _mediator = mediator;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetProducts()
         {
-            var productsEntity = await _productRepository.GetProductsAsync();
-            return _mapper.Map<IEnumerable<ProductDTO>>(productsEntity);
+            var productsQuery = new GetProductsQuery();
+
+            if (productsQuery is null)
+                throw new Exception("Entity could not be loaded");
+
+            var result = await _mediator.Send(productsQuery);
+            return _mapper.Map<IEnumerable<ProductDTO>>(result);
         }
 
         public async Task<ProductDTO> GetProductById(int id)
         {
-            var productEntity = await _productRepository.GetByIdAsync(id);
-            return _mapper.Map<ProductDTO>(productEntity);
-        }
+            var productQuery = new GetProductByIdQuery(id);
 
-        public async Task<ProductDTO> GetProductCategory(int id)
-        {
-            var productEntity = await _productRepository.GetProductCategoryAsync(id);
-            return _mapper.Map<ProductDTO>(productEntity);
+            if (productQuery is null)
+                throw new Exception("Entity could not be loaded");
+
+            var result = await _mediator.Send(productQuery);
+            return _mapper.Map<ProductDTO>(result);
         }
 
         public async Task Add(ProductDTO productDTO)
         {
-            var productEntity = _mapper.Map<ProductDTO, Product>(productDTO);
-            await _productRepository.CreateAsync(productEntity);
+            var productCreateCommand = _mapper.Map<ProductCreateCommand>(productDTO);
+            await _mediator.Send(productCreateCommand);
         }
 
         public async Task Update(ProductDTO productDTO)
         {
-            var productEntity = _mapper.Map<ProductDTO, Product>(productDTO);
-            await _productRepository.UpdateAsync(productEntity);
+            var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(productDTO);
+            await _mediator.Send(productUpdateCommand);
         }
 
         public async Task Delete(int id)
         {
-            var productEntity = await _productRepository.GetByIdAsync(id);
-            await _productRepository.DeleteAsync(productEntity);
+            var productRemoveCommand = new ProductRemoveCommand(id);
+
+            if(productRemoveCommand is null)
+                throw new Exception("Entity could not be loaded");
+
+            await _mediator.Send(productRemoveCommand);
         }
     }
 }

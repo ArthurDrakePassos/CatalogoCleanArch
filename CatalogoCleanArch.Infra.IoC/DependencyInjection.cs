@@ -15,11 +15,17 @@ namespace CatalogoCleanArch.Infra.IoC
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>( options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
+
             services.AddAutoMapper(cfg => cfg.AddProfile<DomainToDTOMappingProfile>());
+
+            var myhandlers = AppDomain.CurrentDomain.Load("CatalogoCleanArch.Application");
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));
+
             return services;
         }
     }
