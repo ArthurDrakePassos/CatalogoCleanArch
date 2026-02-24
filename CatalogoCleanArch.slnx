@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="CatalogoCleanArch.Application/CatalogoCleanArch.Application.csproj" />
+  <Project Path="CatalogoCleanArch.Domain.Tests/CatalogoCleanArch.Domain.Tests.csproj" Id="72c8e933-86a6-4a3e-ba50-03c4cc7fda92" />
+  <Project Path="CatalogoCleanArch.Domain/CatalogoCleanArch.Domain.csproj" />
+  <Project Path="CatalogoCleanArch.Infra.Data/CatalogoCleanArch.Infra.Data.csproj" />
+  <Project Path="CatalogoCleanArch.Infra.IoC/CatalogoCleanArch.Infra.IoC.csproj" />
+  <Project Path="CatalogoCleanArch.WebUI/CatalogoCleanArch.WebUI.csproj" />
+</Solution>
