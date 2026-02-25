@@ -31,7 +31,7 @@ namespace CatalogoCleanArch.Application.DTOs
         [MaxLength(200)]
         [DisplayName("Product Image")]
         public string Image { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         public int CategoryId { get; set; }
 
     }

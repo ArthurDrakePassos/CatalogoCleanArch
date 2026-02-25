@@ -1,4 +1,5 @@
-﻿using CatalogoCleanArch.Application.Interfaces;
+﻿using CatalogoCleanArch.Application.DTOs;
+using CatalogoCleanArch.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogoCleanArch.WebUI.Controllers
@@ -16,6 +17,85 @@ namespace CatalogoCleanArch.WebUI.Controllers
         {
             var categories = await _categoryService.GetCategories();
             return View(categories);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CategoryDTO category)
+        {
+            if (ModelState.IsValid)
+            {
+                await _categoryService.Add(category);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(category);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var categoryDTO = await _categoryService.GetCategoryById(id);
+
+            if (categoryDTO == null)
+                return NotFound();
+
+            return View(categoryDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryDTO category)
+        {
+            if (ModelState.IsValid)
+            {
+                await _categoryService.Update(category);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(category);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var categoryDTO = await _categoryService.GetCategoryById(id);
+
+            if (categoryDTO == null)
+                return NotFound();
+
+            return View(categoryDTO);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _categoryService.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var categoryDTO = await _categoryService.GetCategoryById(id);
+
+            if (categoryDTO == null)
+                return NotFound();
+
+            return View(categoryDTO);
         }
     }
 }

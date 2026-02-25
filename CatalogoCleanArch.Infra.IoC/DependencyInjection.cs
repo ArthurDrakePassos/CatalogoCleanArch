@@ -22,6 +22,7 @@ namespace CatalogoCleanArch.Infra.IoC
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddAutoMapper(cfg => cfg.AddProfile<DomainToDTOMappingProfile>());
+            services.AddAutoMapper(cfg => cfg.AddProfile<DTOToCommandMappingProfile>());
 
             var myhandlers = AppDomain.CurrentDomain.Load("CatalogoCleanArch.Application");
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(myhandlers));

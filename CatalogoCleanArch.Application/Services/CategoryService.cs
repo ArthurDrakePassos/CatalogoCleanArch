@@ -22,7 +22,7 @@ namespace CatalogoCleanArch.Application.Services
             return _mapper.Map<IEnumerable<CategoryDTO>>(categoriesEntity);
         }
 
-        public async Task<CategoryDTO> GetCategoryById(int id)
+        public async Task<CategoryDTO> GetCategoryById(int? id)
         {
             var categoryEntity = await _categoryRepository.GetByIdAsync(id);
             return _mapper.Map<CategoryDTO>(categoryEntity);
